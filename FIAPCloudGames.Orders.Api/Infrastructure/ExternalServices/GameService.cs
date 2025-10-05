@@ -7,8 +7,9 @@ public class GameService(HttpClient httpClient) : IGameService
 {
     public async Task<IEnumerable<GameResponse>> GetGameListByIds(IEnumerable<Guid> gamesIds)
     {
+        var request = new GetGamesByIdsRequest(gamesIds);
 
-        HttpResponseMessage response = await httpClient.PostAsJsonAsync("games/by-id", gamesIds);
+        HttpResponseMessage response = await httpClient.PostAsJsonAsync("/games/by-ids", request);
 
         return await response.Content.ReadFromJsonAsync<IEnumerable<GameResponse>>()
             ?? [];

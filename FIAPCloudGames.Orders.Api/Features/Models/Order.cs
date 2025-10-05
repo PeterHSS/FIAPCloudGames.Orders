@@ -2,11 +2,35 @@
 
 public sealed class Order
 {
-    public Guid Id { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public Guid UserId { get; set; }
-    public ICollection<OrderItem> Items { get; set; } = [];
-    public OrderStatus Status { get; set; } 
-    public DateTime UpdatedAt { get; set; }
-    public decimal TotalAmount { get; set; }
+    private Order(Guid id, DateTime createdAt, Guid userId, OrderStatus status, decimal totalAmount)
+    {
+        Id = id;
+        CreatedAt = createdAt;
+        UserId = userId;
+        Status = status;
+        TotalAmount = totalAmount;
+    }
+
+    private Order() { }
+
+
+    public Guid Id { get; private set; }
+    public DateTime CreatedAt { get; private set; }
+    public Guid UserId { get; private set; }
+    public ICollection<OrderItem> Items { get; private set; }
+    public OrderStatus Status { get; private set; }
+    public DateTime UpdatedAt { get; private set; }
+    public decimal TotalAmount { get; private set; }
+
+    public static Order Create(Guid userId, decimal totalAmount)
+    => new(Guid.NewGuid(), DateTime.UtcNow, userId, OrderStatus.Pending, totalAmount);
+
+    public void ApplyItems(ICollection<OrderItem> items) => Items = items;
+
+    public void ChangeStatus(OrderStatus status)
+    {
+        Status = status;
+        UpdatedAt = DateTime.UtcNow;
+    }
 }
+

@@ -3,7 +3,7 @@ using FIAPCloudGames.Orders.Api.Commom.Interfaces;
 using FIAPCloudGames.Orders.Api.Commom.Middlewares;
 using FIAPCloudGames.Orders.Api.Features.Commands.Create;
 using FIAPCloudGames.Orders.Api.Features.Commands.Delete;
-using FIAPCloudGames.Orders.Api.Features.Commands.Update;
+using FIAPCloudGames.Orders.Api.Features.Commands.UpdateStatus;
 using FIAPCloudGames.Orders.Api.Features.Models;
 using FIAPCloudGames.Orders.Api.Features.Queries.GetById;
 using FIAPCloudGames.Orders.Api.Features.Queries.GetByUserId;
@@ -110,7 +110,7 @@ public static class DependecyInjection
     {
         services.AddHttpClient<IGameService, GameService>(client =>
         {
-            var baseUrl = configuration.GetValue<string>("ExternalServices:GameService")!;
+            var baseUrl = configuration.GetValue<string>("GameService:BaseAddress")!;
 
             client.BaseAddress = new Uri(baseUrl);
         });

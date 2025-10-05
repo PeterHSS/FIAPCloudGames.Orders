@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
+﻿using FIAPCloudGames.Orders.Api.Commom.Exceptions;
+using Microsoft.AspNetCore.Diagnostics;
 using Serilog;
 
 namespace FIAPCloudGames.Orders.Api.Commom.Middlewares;
@@ -11,7 +12,7 @@ internal sealed class GlobalExceptionHandlerMiddleware(IProblemDetailsService pr
 
         httpContext.Response.StatusCode = exception switch
         {
-            KeyNotFoundException => StatusCodes.Status404NotFound,
+            OrderNotFoundException => StatusCodes.Status404NotFound,
             ArgumentException or InvalidOperationException => StatusCodes.Status400BadRequest,
             _ => StatusCodes.Status500InternalServerError
         };

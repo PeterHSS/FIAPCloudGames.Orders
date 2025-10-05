@@ -31,5 +31,7 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
             .WithOne()
             .HasForeignKey(item => item.OrderId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Navigation(order => order.Items).AutoInclude();
     }
 }

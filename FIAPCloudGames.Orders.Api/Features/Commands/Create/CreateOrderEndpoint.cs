@@ -10,7 +10,7 @@ public class CreateOrderEndpoint : ICarterModule
         app.MapPost("/orders",
             async (CreateOrderRequest request, CreateOrderUseCase useCase, CancellationToken cancellationToken) =>
             {
-                await useCase.HandleAsync(request);
+                await useCase.HandleAsync(request, cancellationToken);
 
                 return Results.Created();
             })
