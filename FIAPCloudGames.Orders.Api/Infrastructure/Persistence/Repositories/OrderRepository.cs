@@ -19,6 +19,9 @@ internal sealed class OrderRepository(OrderDbContext context) : IOrderRepository
     public async Task<IEnumerable<Order>> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
         => await context.Orders.Where(o => o.UserId == userId).ToListAsync(cancellationToken);
 
+    public async Task<IEnumerable<Order>> GetPendingOrders(CancellationToken cancellationToken = default, int size = 1000)
+        => await context.Orders.Where(o => o.Status == OrderStatus.Processing).Take(size).ToListAsync(cancellationToken);
+
     public void Update(Order order)
         => context.Orders.Update(order);
 }

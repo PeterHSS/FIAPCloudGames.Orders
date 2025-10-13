@@ -1,9 +1,10 @@
-﻿using FIAPCloudGames.Orders.Api.Commom.Interfaces;
+﻿using FIAPCloudGames.Orders.Api.Commom.Exceptions;
+using FIAPCloudGames.Orders.Api.Commom.Interfaces;
 using FIAPCloudGames.Orders.Api.Features.Repositories;
 
 namespace FIAPCloudGames.Orders.Api.Features.Queries.GetByUserId;
 
-public class GetOrdersByUserIdUseCase(IOrderRepository repository, IGameService gameService)
+public class GetOrdersByUserIdUseCase(IOrderRepository repository, IGameService gameService, ICurrentUserService currentUser)
 {
     public async Task<IEnumerable<OrderResponse>> HandleAsync(Guid userId, CancellationToken cancellationToken = default)
     {
@@ -11,6 +12,9 @@ public class GetOrdersByUserIdUseCase(IOrderRepository repository, IGameService 
 
         if (orders is null || !orders.Any())
             return [];
+
+        if (userId != currentUser.UserId && !currentUser.IsAdmin)
+            throw new ForbiddenGetOrderByIdsException();
 
         var ordersGameIds = orders.SelectMany(o => o.Items).Select(i => i.GameId).Distinct();
 

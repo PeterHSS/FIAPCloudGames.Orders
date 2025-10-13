@@ -23,7 +23,7 @@ public sealed class Order
     public decimal TotalAmount { get; private set; }
 
     public static Order Create(Guid userId, decimal totalAmount)
-    => new(Guid.NewGuid(), DateTime.UtcNow, userId, OrderStatus.Pending, totalAmount);
+    => new(Guid.NewGuid(), DateTime.UtcNow, userId, OrderStatus.Processing, totalAmount);
 
     public void ApplyItems(ICollection<OrderItem> items) => Items = items;
 

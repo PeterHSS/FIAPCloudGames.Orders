@@ -1,7 +1,7 @@
 ﻿using FIAPCloudGames.Orders.Api.Commom.Interfaces;
 using FIAPCloudGames.Orders.Api.Features.Queries;
 
-namespace FIAPCloudGames.Orders.Api.Infrastructure.ExternalServices;
+namespace FIAPCloudGames.Orders.Api.Infrastructure.Services;
 
 public class GameService(HttpClient httpClient) : IGameService
 {

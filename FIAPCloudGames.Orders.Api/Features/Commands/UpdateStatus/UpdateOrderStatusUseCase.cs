@@ -9,7 +9,7 @@ public class UpdateOrderStatusUseCase(IOrderRepository orderRepository, IUnitOfW
 {
     public async Task HandleAsync(Guid orderId, UpdateOrderStatusRequest request, CancellationToken cancellationToken)
     {
-        var order = await orderRepository.GetByIdAsync(orderId, cancellationToken) 
+        var order = await orderRepository.GetByIdAsync(orderId, cancellationToken)
             ?? throw new OrderNotFoundException(orderId);
 
         order.ChangeStatus(request.Status);

@@ -13,6 +13,8 @@ internal sealed class GlobalExceptionHandlerMiddleware(IProblemDetailsService pr
         httpContext.Response.StatusCode = exception switch
         {
             OrderNotFoundException => StatusCodes.Status404NotFound,
+            ForbiddenGetOrderByIdsException => StatusCodes.Status403Forbidden,
+            ForbiddenUpdateOrderStatusException => StatusCodes.Status403Forbidden,
             ArgumentException or InvalidOperationException => StatusCodes.Status400BadRequest,
             _ => StatusCodes.Status500InternalServerError
         };

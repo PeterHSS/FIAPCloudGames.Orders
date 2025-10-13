@@ -7,12 +7,12 @@ using FIAPCloudGames.Orders.Api.Features.Commands.UpdateStatus;
 using FIAPCloudGames.Orders.Api.Features.Models;
 using FIAPCloudGames.Orders.Api.Features.Queries.GetById;
 using FIAPCloudGames.Orders.Api.Features.Queries.GetByUserId;
+using FIAPCloudGames.Orders.Api.Features.Queries.GetPending;
 using FIAPCloudGames.Orders.Api.Features.Repositories;
-using FIAPCloudGames.Orders.Api.Infrastructure.ExternalServices;
 using FIAPCloudGames.Orders.Api.Infrastructure.Persistence.Context;
 using FIAPCloudGames.Orders.Api.Infrastructure.Persistence.Repositories;
+using FIAPCloudGames.Orders.Api.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace FIAPCloudGames.Orders.Api;
 
@@ -57,7 +57,7 @@ public static class DependecyInjection
     private static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services
-            .AddExternalServices(configuration)
+            .AddServices(configuration)
             .AddRepositories(configuration);
 
         return services;
@@ -83,6 +83,8 @@ public static class DependecyInjection
 
         services.AddScoped<GetOrdersByUserIdUseCase>();
 
+        services.AddScoped<GetProcessingOrdersUseCase>();
+
         return services;
     }
 
@@ -106,7 +108,7 @@ public static class DependecyInjection
         dbContext.Database.Migrate();
     }
 
-    private static IServiceCollection AddExternalServices(this IServiceCollection services, IConfiguration configuration)
+    private static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddHttpClient<IGameService, GameService>(client =>
         {
@@ -114,6 +116,10 @@ public static class DependecyInjection
 
             client.BaseAddress = new Uri(baseUrl);
         });
+
+        services.AddHttpContextAccessor();
+
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
 
         return services;
     }
