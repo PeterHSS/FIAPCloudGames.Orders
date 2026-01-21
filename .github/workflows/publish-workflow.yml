@@ -65,5 +65,5 @@ jobs:
         run: |
           export IMAGE=${{ env.DOCKERHUB_REPOSITORY }}:${{ github.sha }}
           kubectl create namespace ${{ env.K8S_NAMESPACE }} --dry-run=client -o yaml | kubectl apply -f -
-          envsubst < FIAPCloudOrders.Orders.Api/kubernetes.yaml | kubectl apply -f -
+          envsubst < FIAPCloudGames.Orders.Api/kubernetes.yaml | kubectl apply -f -
           kubectl rollout status deployment/fiapcloudorders-orders-api -n ${{ env.K8S_NAMESPACE }}
