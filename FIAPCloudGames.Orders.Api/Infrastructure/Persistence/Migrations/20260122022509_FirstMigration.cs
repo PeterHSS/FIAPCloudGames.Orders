@@ -11,8 +11,12 @@ namespace FIAPCloudGames.Orders.Api.Infrastructure.Persistence.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "orders");
+
             migrationBuilder.CreateTable(
                 name: "Orders",
+                schema: "orders",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -29,6 +33,7 @@ namespace FIAPCloudGames.Orders.Api.Infrastructure.Persistence.Migrations
 
             migrationBuilder.CreateTable(
                 name: "OrderItems",
+                schema: "orders",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -42,6 +47,7 @@ namespace FIAPCloudGames.Orders.Api.Infrastructure.Persistence.Migrations
                     table.ForeignKey(
                         name: "FK_OrderItems_Orders_OrderId",
                         column: x => x.OrderId,
+                        principalSchema: "orders",
                         principalTable: "Orders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -49,11 +55,13 @@ namespace FIAPCloudGames.Orders.Api.Infrastructure.Persistence.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrderItems_OrderId",
+                schema: "orders",
                 table: "OrderItems",
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_UserId",
+                schema: "orders",
                 table: "Orders",
                 column: "UserId");
         }
@@ -62,10 +70,12 @@ namespace FIAPCloudGames.Orders.Api.Infrastructure.Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "OrderItems");
+                name: "OrderItems",
+                schema: "orders");
 
             migrationBuilder.DropTable(
-                name: "Orders");
+                name: "Orders",
+                schema: "orders");
         }
     }
 }

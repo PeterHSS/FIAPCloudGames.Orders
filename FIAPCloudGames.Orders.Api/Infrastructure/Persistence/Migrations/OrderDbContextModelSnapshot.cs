@@ -17,6 +17,7 @@ namespace FIAPCloudGames.Orders.Api.Infrastructure.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("orders")
                 .HasAnnotation("ProductVersion", "9.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -50,7 +51,7 @@ namespace FIAPCloudGames.Orders.Api.Infrastructure.Persistence.Migrations
                     b.HasIndex("UserId")
                         .HasDatabaseName("IX_Orders_UserId");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders", "orders");
                 });
 
             modelBuilder.Entity("FIAPCloudGames.Orders.Api.Features.Models.OrderItem", b =>
@@ -74,7 +75,7 @@ namespace FIAPCloudGames.Orders.Api.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderItems", (string)null);
+                    b.ToTable("OrderItems", "orders");
                 });
 
             modelBuilder.Entity("FIAPCloudGames.Orders.Api.Features.Models.OrderItem", b =>
