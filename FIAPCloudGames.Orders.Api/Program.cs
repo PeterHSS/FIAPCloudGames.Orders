@@ -2,11 +2,14 @@ using System.Security.Claims;
 using System.Text;
 using Carter;
 using FIAPCloudGames.Orders.Api;
-using Azure.Monitor.OpenTelemetry.AspNetCore;
 using FIAPCloudGames.Orders.Api.Commom.Extensions;
 using FIAPCloudGames.Orders.Api.Commom.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Npgsql;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +19,21 @@ builder.Host.AddSerilog();
 
 builder.Services
     .AddOpenTelemetry()
-    .UseAzureMonitor(configureAzureMonitor => configureAzureMonitor.ConnectionString = builder.Configuration["ApplicationInsights:ConnectionString"]);
+    .WithMetrics(metrics =>
+        metrics
+            .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("FIAPCloudGames.Orders.Api"))
+            .AddAspNetCoreInstrumentation()
+            .AddHttpClientInstrumentation()
+            .AddRuntimeInstrumentation()
+            .AddProcessInstrumentation()
+            .AddNpgsqlInstrumentation()
+            .AddPrometheusExporter())
+    .WithTracing(tracing =>
+        tracing
+            .AddHttpClientInstrumentation()
+            .AddAspNetCoreInstrumentation()
+            .AddEntityFrameworkCoreInstrumentation()
+            .AddNpgsql());
 
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -46,6 +63,8 @@ if (app.Environment.IsDevelopment())
 
     app.ApplyMigrations();
 }
+
+app.UseOpenTelemetryPrometheusScrapingEndpoint("/orders/metrics");
 
 app.UseMiddleware<RequestLogContextMiddleware>();
 

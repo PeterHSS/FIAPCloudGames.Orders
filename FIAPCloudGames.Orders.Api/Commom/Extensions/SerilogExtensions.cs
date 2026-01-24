@@ -1,5 +1,4 @@
-﻿using Microsoft.ApplicationInsights.Extensibility;
-using Serilog;
+﻿using Serilog;
 
 namespace FIAPCloudGames.Orders.Api.Commom.Extensions;
 
@@ -10,12 +9,6 @@ public static class SerilogExtensions
         hostBuilder.UseSerilog((context, configuration) =>
         {
             configuration.ReadFrom.Configuration(context.Configuration);
-
-            TelemetryConfiguration telemetryConfiguration = TelemetryConfiguration.CreateDefault();
-
-            telemetryConfiguration.ConnectionString = context.Configuration["ApplicationInsights:ConnectionString"];
-
-            configuration.WriteTo.ApplicationInsights(telemetryConfiguration, TelemetryConverter.Traces);
         });
         
         return hostBuilder;
